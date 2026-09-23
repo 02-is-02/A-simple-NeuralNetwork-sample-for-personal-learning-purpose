@@ -1,4 +1,4 @@
-import math 
+from basic import *
 import random
 import kagglehub
 import csv
@@ -63,7 +63,7 @@ def train(network, training_data, epochs, batch_size, learning_rate):
                     # Pass the error calculated from the old weights to the next iteration (previous layer)
                     error = next_error
         print()  # Move to the next line after the progress bar for the current epoch
-        print(f"Epoch {epoch + 1} - Average MSE: {epoch_mse_sum / total_batches:.6f}")
+        print(f"Epoch {epoch + 1} - Average MSE: {epoch_mse_sum / len(training_data):.6f}")
     print("\nTraining complete.")
 
 def download_mnist():
@@ -108,16 +108,18 @@ def evaluate(network, test_data):
     print(f"Average MSE: {average_mse:.6f}")
     print(f"Accuracy: {accuracy * 100:.2f}%")
 
-if "__name__" == "__main__":
+if __name__ == "__main__":
     # Download the MNIST dataset
     mnist_path = download_mnist()
     
     # Load and preprocess the dataset
-    train_csv_file = os.path.join(mnist_dir_path, "mnist_train.csv")
+    train_csv_file = os.path.join(mnist_path, "mnist_train.csv")
     training_data = load_mnist_data(train_csv_file)
 
     # Initialize and train the network
     network = NeuralNetwork([784, 16, 16, 10])  # Adjust the architecture as needed
     train(network, training_data, epochs=2, batch_size=10, learning_rate=0.01)
 
-    evaluate(network, training_data)  # Evaluate on training data for demonstration
+    test_csv_file = os.path.join(mnist_path, "mnist_test.csv")
+    test_data = load_mnist_data(test_csv_file)
+    evaluate(network, test_data)

@@ -1,4 +1,4 @@
-import Math
+import math
 import random
 
 class DenseLayer:
@@ -39,7 +39,7 @@ def vector_addition(v1, v2):
 
 def sigmoid(vector):
     """Compute the sigmoid function."""
-    return [1 / (1 + Math.exp(-x)) for x in vector]
+    return [1 / (1 + math.exp(-x)) for x in vector]
 
 def sigmoid_derivative(vector):
     """Compute the derivative of the sigmoid function."""
