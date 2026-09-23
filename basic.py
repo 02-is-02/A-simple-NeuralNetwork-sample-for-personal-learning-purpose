@@ -7,12 +7,16 @@ class DenseLayer:
         self.weights = [[random.uniform(-1, 1) for _ in range(input_size)] for _ in range(output_size)]
         self.biases = [random.uniform(-1, 1) for _ in range(output_size)]
 
+        self.last_input = None
+        self.last_z = None
+        self.last_a = None
+
     def forward(self, inputs):
         """Perform the forward pass."""
-        self.inputs = inputs
-        self.z = vector_addition(mat_vec_mul(self.weights, inputs), self.biases)
-        self.a = sigmoid(self.z)
-        return self.a
+        self.last_input = inputs
+        self.last_z = vector_addition(mat_vec_mul(self.weights, inputs), self.biases)
+        self.last_a = sigmoid(self.last_z)
+        return self.last_a
 
 class NeuralNetwork:
     """A simple feedforward neural network."""
