@@ -19,7 +19,7 @@ def train(network, training_data, epochs, batch_size, learning_rate):
         print(f"Total batches: {total_batches}")
 
         update_interval = max(1, total_batches // 100)  # Update progress every 1% of batches
-
+        epoch_mse_sum = 0.0  # To accumulate MSE for the epoch
         
         # 2. Iterate through all batches in the current epoch
         for b_idx, batch in enumerate(batches):
@@ -36,6 +36,9 @@ def train(network, training_data, epochs, batch_size, learning_rate):
                 
                 # ==== Forward Pass ====
                 outputs = network.forward(inputs)
+
+                sample_mse = sum((outputs[i] - targets[i]) ** 2 for i in range(len(targets))) / len(targets)
+                epoch_mse_sum += sample_mse
 
                 # ==== Compute Output Layer Error ====
                 # Derivative: dC/da = (a - y)
@@ -60,6 +63,7 @@ def train(network, training_data, epochs, batch_size, learning_rate):
                     # Pass the error calculated from the old weights to the next iteration (previous layer)
                     error = next_error
         print()  # Move to the next line after the progress bar for the current epoch
+        print(f"Epoch {epoch + 1} - Average MSE: {epoch_mse_sum / total_batches:.6f}")
     print("\nTraining complete.")
 
 def download_mnist():
