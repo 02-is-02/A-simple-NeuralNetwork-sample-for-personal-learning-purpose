@@ -5,8 +5,9 @@ import csv
 import os
 
 def train(network, training_data, epochs, batch_size, learning_rate):
-    """Hand-derived neural network training loop (Optimized online SGD version)."""
+    """Neural Network training loop"""
     
+    print("Starting training...")
     for epoch in range(epochs):
         print(f"Epoch {epoch + 1}/{epochs}")
         # Shuffle data before each epoch to prevent the network from memorizing the sequence
@@ -85,6 +86,24 @@ def load_mnist_data(path):
             training_data.append((inputs, target))
     return training_data
 
+def evaluate(network, test_data):
+    """Evaluate the network's performance on the test dataset."""
+    correct_predictions = 0
+    total_mse = 0.0
+    for inputs, targets in test_data:
+        outputs = network.forward(inputs)
+        predicted_label = outputs.index(max(outputs))
+        actual_label = targets.index(max(targets))
+        if predicted_label == actual_label:
+            correct_predictions += 1
+
+        sample_mse = sum((outputs[i] - targets[i]) ** 2 for i in range(len(targets))) / len(targets)
+        total_mse += sample_mse
+    accuracy = correct_predictions / len(test_data)
+    average_mse = total_mse / len(test_data)
+    print(f"Average MSE: {average_mse:.6f}")
+    print(f"Accuracy: {accuracy * 100:.2f}%")
+
 if "__name__" == "__main__":
     # Download the MNIST dataset
     mnist_path = download_mnist()
@@ -95,5 +114,6 @@ if "__name__" == "__main__":
 
     # Initialize and train the network
     network = NeuralNetwork([784, 16, 16, 10])  # Adjust the architecture as needed
-    print("Starting training...")
     train(network, training_data, epochs=2, batch_size=10, learning_rate=0.01)
+
+    evaluate(network, training_data)  # Evaluate on training data for demonstration
